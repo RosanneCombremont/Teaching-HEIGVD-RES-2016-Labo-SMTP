@@ -1,17 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* *************************************************************************
+ * HEIG-VD, Cours RES
+ *
+ * File        : Joke.java
+ * Authors     : Combremont Rosanne & Ponce Kevin
+ * Created on  : 20.04.2016
+ *
+ * Description : This class contains what's necessary to make a joke:
+ *               - a victim sender
+ *               - a list of victim receivers
+ *               - and the message (subject + body)
+ *
+ *
+ **************************************************************************/
 package model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author rosanne
- */
+
 public class Joke {
     private Person victimSender;
     private final List<Person> victimReceivers = new ArrayList<>();
@@ -49,20 +55,25 @@ public class Joke {
         return new ArrayList<>(victimReceivers);
     }
     
+    // Create the email with the given info
     public Mail createEmail()
     {
         Mail mail = new Mail();
         
+        // Set the email sender
         mail.setFrom(victimSender.getMailAddress());
         
-        System.out.print(message);
+        // Seperate the Subject and the Body of the message
         int index = message.indexOf(';');
         String subj = message.substring(0, index);
         String body = message.substring(index+1, message.length());
         mail.setSubject(subj);
         
+        // Add a signature
         String tmp = body + "\n\r" + victimSender.getFirstName();
         mail.setMessage(tmp);
+        
+        // Set all the receivers
         String[] victims = new String[victimReceivers.size()];
         for(int i = 0; i < victimReceivers.size(); i++)
         {

@@ -1,8 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* *************************************************************************
+ * HEIG-VD, Cours RES
+ *
+ * File        : JokeGenerator.java
+ * Authors     : Combremont Rosanne & Ponce Kevin
+ * Created on  : 20.04.2016
+ *
+ * Description : Business implementation.
+ *
+ *
+ **************************************************************************/
 package model;
 import config.ConfigReader;
 import java.util.List;
@@ -10,16 +16,14 @@ import java.util.Random;
 import java.util.ArrayList;
 import smtp.SmtpClient;
 
-/**
- *
- * @author rosanne
- */
+
 public class JokeGenerator {
     private int nbGroup;
     private ConfigReader config;
     private List<Group> groups;
     private SmtpClient smtpClient;
     
+    // Constructor
     public JokeGenerator(ConfigReader config, SmtpClient smtp) throws Exception
     {
         this.config = config;
@@ -28,7 +32,11 @@ public class JokeGenerator {
         this.smtpClient = smtp;
     }
     
-    //faire x groupes à partir des adresses
+    /* Create nbGroup with the addresses. A group is composed at least of 3
+    *  members: 1 sender and 2 receivers. They have to be different.
+    *  A receiver can only receive one joke email in a "campaign". If there is
+    *  not enough addresses to create min 3 members groups, throw an error that
+    *  stop the application. */
     private List<Group> makeGroup() throws Exception
     {
         List<String> adresses = config.getAdresses();
@@ -36,7 +44,7 @@ public class JokeGenerator {
         List<Integer> check = new ArrayList<>();
         Random rand = new Random();
                 
-        //Si pas assez d'adresse pour faire des groupes hétéogènes
+        // If there is not enough addresses
         if((adresses.size() / nbGroup) < 3)
         {
             throw new Exception("Not enough mail addresses");
@@ -44,7 +52,8 @@ public class JokeGenerator {
         }
         else
         {
-            
+            // Create the groups randomly. The addresses already in the group
+            // are marked and can't be choosen again
             int nbVictimPerGroup = adresses.size() / nbGroup;
             int z;
             for(int i = 0; i < nbGroup; i++)
@@ -62,14 +71,14 @@ public class JokeGenerator {
                     
                 }
                 check.clear();
+                // Add the new group to the class list of groups
                 allGroups.add(group);
             }
-        }
-        
+        }        
         return allGroups;
     }
     
-    //selectionner le msg
+    // Select a message randomly
     public String selectMsg()
     {
         List<String> msg = config.getMsg();
@@ -78,7 +87,7 @@ public class JokeGenerator {
         return msg.get(random.nextInt(msg.size()));
     }
     
-    //créer une joke par groupe
+    // Create a joke for each groups
     public List<Joke> createJokes()
     {
         List<Joke> jokes = new ArrayList<>();
@@ -88,7 +97,7 @@ public class JokeGenerator {
         for(Group g : groups)
         {
             Joke j = new Joke();
-            // Define the sender
+            // Define randomly the sender 
             randSender = r.nextInt(g.getVictims().size());
             j.setVictimSender(g.getVictims().get(randSender));
             // Set the other members
@@ -103,7 +112,7 @@ public class JokeGenerator {
         return jokes;
     }
     
-    //envoyer le mail
+    // Send the emails based on the jokes with the SMTP client
     public void sendJokes()
     {
         List<Joke> jokes = createJokes();
@@ -118,13 +127,7 @@ public class JokeGenerator {
             catch(Throwable e)
             {
                 System.out.println("Error send joke");
-            }
-            
+            }            
         }
-    }  
-    
-    
-    
-    
-    
+    }      
 }

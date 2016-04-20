@@ -1,14 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* *************************************************************************
+ * HEIG-VD, Cours RES
+ *
+ * File        : Mail.java
+ * Authors     : Combremont Rosanne & Ponce Kevin
+ * Created on  : 20.04.2016
+ *
+ * Description : A basic and generic implementation of an email class
+ *
+ *
+ **************************************************************************/
 package model;
 
-/**
- *
- * @author rosanne
- */
+
 public class Mail {
     private String from;
     private String[] to;

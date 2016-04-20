@@ -1,17 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* *************************************************************************
+ * HEIG-VD, Cours RES
+ *
+ * File        : Group.java
+ * Authors     : Combremont Rosanne & Ponce Kevin
+ * Created on  : 20.04.2016
+ *
+ * Description : Class Group represents a group of Person.
+ *
+ *
+ **************************************************************************/
 package model;
 import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- *
- * @author rosanne
- */
 public class Group {
     private final List<Person> victims = new ArrayList<>();
     

@@ -1,8 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* *************************************************************************
+ * HEIG-VD, Cours RES
+ *
+ * File        : SmtpClient.java
+ * Authors     : Combremont Rosanne & Ponce Kevin
+ * Created on  : 20.04.2016
+ *
+ * Description : Implementation of a smtp client.
+ *
+ *
+ **************************************************************************/
 package smtp;
 
 import java.io.BufferedReader;
@@ -12,16 +18,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import model.Mail;
 
-/**
- *
- * @author rosanne
- */
+
 public class SmtpClient {
     
-    Socket clientSocket;
-    BufferedReader in;
-    PrintWriter out;  
-       
+    private Socket clientSocket;
+    private BufferedReader in;
+    private PrintWriter out;  
+     
+    // Disconnect from the socket, reader and writer
     public void disconnect()
     {
         try
@@ -41,7 +45,9 @@ public class SmtpClient {
         try
         {
             String recept = "";
-            clientSocket = new Socket(serverAddress, serverPort);                        
+            // Creation of the socket
+            clientSocket = new Socket(serverAddress, serverPort);    
+            // Initialisation of the reader and writer
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream());
            
@@ -61,17 +67,20 @@ public class SmtpClient {
         
     }
     
+    // Send an email using parts of STMP protocole
     public void sendMessage(Mail mail) throws Throwable
     {
         String recept;
         String messageSend;
         
+        // EHLO command
         messageSend = "EHLO RES";
         System.out.println(messageSend);
         out.print(messageSend);
         out.print("\r\n");
         out.flush();
 
+        // Read the response 
         do
         {
             recept = in.readLine();
@@ -84,6 +93,7 @@ public class SmtpClient {
 
         }while(!recept.startsWith("250 "));
 
+        // MAIL FROM:
         messageSend = "MAIL FROM: " + mail.getFrom();
         System.out.println(messageSend);
         out.print(messageSend);        
@@ -94,7 +104,8 @@ public class SmtpClient {
          System.out.println(recept);
 
          if(recept.startsWith("250 "))
-         {                  
+         {        
+             // RCPT TO:
              for(String to : mail.getTo())
              {
                  messageSend = "RCPT TO: " + to;
@@ -114,6 +125,7 @@ public class SmtpClient {
 
              }
              
+             // DATA
              messageSend = "DATA";
              System.out.println(messageSend);
              out.print(messageSend);             
@@ -129,11 +141,13 @@ public class SmtpClient {
              }
              else
              {
-                 // Header
+                 // Email header
+                 // From:
                  out.print("From: ");
                  out.print(mail.getFrom());
                  out.print("\r\n");
                  
+                 // To:
                  out.print("To: ");
                  for(String to : mail.getTo())
                  {
@@ -142,10 +156,12 @@ public class SmtpClient {
                  }
                  out.print("\r\n");
                  
+                 // Subject:
                  out.print(mail.getSubject());
                  out.print("\r\n");
                  out.print("\r\n");
                  
+                 // Email body
                  out.print(mail.getMessage());
                  
                  // End of message
@@ -167,8 +183,6 @@ public class SmtpClient {
          {
              disconnect();
              throw new Throwable("Error MAIL FROM");
-         }
-            
-    }
-    
+         }            
+    }    
 }
