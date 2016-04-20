@@ -7,29 +7,40 @@
 * Ponce Kevin, kevin.ponce@heig-vd.ch
 
 ## Description
-In this lab, we have developed a client application in java. This client application use the Socket API to communicate with a SMTP server.
+In this lab, we have developped a client application in java. This client application use the Socket API to communicate with a SMTP server.
 The client application plays automatically pranks on a list of victims. The application read a file with all e-mail address and choose victims.
-The client application choose randoms e-mails and a random message. We use a random function to choose the sender and recipients. 
+The client application choose random e-mails and a random message. We use a random function to choose the sender and recipients. 
+
+##Installation
+To run our application enter the following command in the Labo-SMTP/dist:
+* java -jar Labo-SMTP.jar
+Make sure first to edit the config/ files:
+* in config.properties set the server properties and the number of group you want to create
+* in message.utf8 write the messages. Be sure to follow the shown structure exemple
+* in victims.utf8 list the email addresses (firstname.lastname@blabla.com)
+
 
 ##Diagram of classes
+![Class diagram](./figures/uml.jpg)
+
+There are 4 packages.
+* SMTP client to communicate with the SMTP server
+* model with all classes to manage joke person and group
+* config to read the configuration files
+* smtp with the main class
 
 ##Implementation
-We use a file properties for  default values (server address, port and number of group).
-When the application start  we read whole file configuration.
-We generate prank 
+To begin we initialize a list of all e-mail addresses available and a list for all messages
+To complete e-mail address list we read victims.utf8 and for message list message.utf8
 
-Then we start the communication with the server. When the connection is etablished we send e-mail information
-* EHLO
-* MAIL FROM: address of sender
-* RCPT TO: addresses of receiver
-* DATA message
-** SUBJECT the email subject
-** BODY the body of the message
+We use a file properties for default values (server address, port and number of group).
+When the application start we read the whole file configuration. Then we start the communication with the server.
 
-all address, the subject and the body  are in MAIL class.
-The MAIL class is passed with the call function
+After that we call JokeGenerator class. This class create groups by choosing random e-mail in the address list.
+Furthermore we create the joke. We choose a random sender in the group list and define victims. We choose the message to send too.
 
-When all whole prank are sended we close the socket and out/in buffer
+Then for each joke we send all email.
+When all are sended we close the socket and out/in buffer
 
 ## Mock server
 In this lab we use an OpenSource Mock smtp server. 
@@ -48,6 +59,9 @@ After all this step we are able to open a connection with smtp mock server with 
 
 ## Test
 We have checked our client application by using smtp mock server and the HEIG smtp server.
-* localhost 2525 smtp mock server
-* stmp.heig-vd.ch 25 HEIG stmp server
+* localhost 2525 smtp mock server (set in config.properties: localhost and 2525)
+* stmp.heig-vd.ch 25 HEIG stmp server (set in config.properties: smtp.heig-vd.ch and 25)
+
+Test passed with both server
+
 
